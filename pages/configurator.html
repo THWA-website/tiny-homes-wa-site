@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tiny Homes WA — 3D Configurator</title>
+<!-- Google Model Viewer -->
+<script src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js" type="module"></script>
+<!-- jsPDF for PDF export -->
+<script crossorigin="anonymous" src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/* ============================================================
+   THWA 3D CONFIGURATOR — MERGED & IMPROVED
+   Combines Config 1 (dark aesthetic) + Config 2 (full features)
+   + improvements: real GLBs, AR, deeplink, mobile, loading states
+   Authority: Jason Thomas Cawley
+   ============================================================ */
+
+:root {
+  --bg:        #0b0c10;
+  --bg2:       #020617;
+  --bg3:       #0f1629;
+  --card:      #111827;
+  --border:    rgba(148,163,184,0.2);
+  --border2:   rgba(148,163,184,0.4);
+  --text:      #f5f5f5;
+  --muted:     #9ca3af;
+  --green:     #22c55e;
+  --green2:    #16a34a;
+  --teal:      #2c7a7b;
+  --teal2:     #103a3b;
+  --gold:      #d4af37;
+  --blue:      #a5b4fc;
+  --radius:    12px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+  --transition: all 0.2s ease;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.cfg-header {
+  background: linear-gradient(135deg, var(--teal2) 0%, #0b1a1a 100%);
+  padding: 20px 24px 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.cfg-header .badge {
+  display: inline-block;
+  background: rgba(44,122,123,0.3);
+  color: #9be2e3;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(44,122,123,0.4);
+}
+.cfg-header h1 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.cfg-header p {
+  font-size: 13px;
+  opacity: 0.85;
+  max-width: 600px;
+  margin: 0 auto 10px;
+}
+.cfg-header .kpi-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.kpi {
+  background: rgba(44,122,123,0.2);
+  color: #9be2e3;
+  border: 1px solid rgba(44,122,123,0.3);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px;
+  font-size: 11px;
+}
+
+/* ── MAIN LAYOUT ── */
+.cfg-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.cfg-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+  gap: 20px;
+}
+
+/* ── LEFT PANEL ── */
+.cfg-left { display: flex; flex-direction: column; gap: 14px; }
+
+/* Model/Size tabs */
+.tab-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.tab-btn {
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.tab-btn.active {
+  background: var(--green);
+  color: #020617;
+  border-color: var(--green);
+  font-weight: 600;
+}
+.tab-btn:hover:not(.active) {
+  border-color: var(--green);
+  color: var(--text);
+}
+
+/* Pathway tabs */
+.pathway-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.pathway-btn {
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.pathway-btn.active {
+  background: var(--teal);
+  color: white;
+  border-color: var(--teal);
+  font-weight: 600;
+}
+.pathway-btn:hover:not(.active) {
+  border-color: var(--teal);
+  color: var(--text);
+}
+.pathway-desc {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  min-height: 16px;
+}
+
+/* Viewer */
+.viewer-panel {
+  position: relative;
+  background: var(--bg2);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border2);
+}
+.viewer-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 10px 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.viewer-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 12px;
+  border-radius: var(--radius-pill) var(--radius-pill) 0 0;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.viewer-tab.active {
+  background: var(--card);
+  color: var(--text);
+  border-bottom: 2px solid var(--green);
+}
+
+model-viewer {
+  width: 100%;
+  height: 420px;
+  background: radial-gradient(circle at top, #1f2937 0%, #020617 60%);
+  display: block;
+}
+.render-img {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  display: none;
+}
+.render-img.active { display: block; }
+
+/* Loading overlay */
+.viewer-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(2,6,23,0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 10;
+  transition: opacity 0.3s;
+}
+.viewer-loading.hidden { opacity: 0; pointer-events: none; }
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(34,197,94,0.2);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 12px; color: var(--muted); }
+
+/* Camera bar */
+.camera-bar {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  pointer-events: none;
+}
+.cam-btn {
+  pointer-events: auto;
+  padding: 4px 10px;
+  font-size: 11px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: rgba(15,23,42,0.85);
+  color: #e5e7eb;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(4px);
+}
+.cam-btn:hover { background: rgba(34,197,94,0.9); color: #020617; }
+
+/* AR badge */
+.ar-badge {
+  position: absolute;
+  top: 52px;
+  right: 10px;
+  background: rgba(34,197,94,0.15);
+  border: 1px solid rgba(34,197,94,0.4);
+  color: var(--green);
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: var(--radius-pill);
+  pointer-events: none;
+}
+
+/* Share/deeplink bar */
+.share-bar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.share-input {
+  flex: 1;
+  min-width: 0;
+  padding: 6px 10px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 11px;
+  font-family: monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.share-copy-btn {
+  padding: 6px 12px;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+.share-copy-btn:hover { border-color: var(--green); color: var(--green); }
+
+/* ── RIGHT PANEL ── */
+.cfg-right {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: var(--bg2);
+  border-radius: var(--radius);
+  padding: 16px;
+  border: 1px solid var(--border2);
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+.cfg-right::-webkit-scrollbar { width: 4px; }
+.cfg-right::-webkit-scrollbar-thumb { background: rgba(34,197,94,0.3); border-radius: 2px; }
+
+.section-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+/* Colour swatches */
+.swatch-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+.swatch-btn {
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+}
+.swatch-btn.active {
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.3);
+}
+.swatch-btn:hover { transform: scale(1.1); }
+.swatch-tooltip {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card);
+  color: var(--text);
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 10;
+}
+.swatch-btn:hover .swatch-tooltip { opacity: 1; }
+
+/* Select */
+.cfg-select {
+  width: 100%;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border2);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition);
+}
+.cfg-select:focus { border-color: var(--green); }
+
+/* Pill row */
+.pill-row { display: flex; flex-wrap: wrap; gap: 5px; }
+.pill {
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border2);
+  font-size: 12px;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  transition: var(--transition);
+}
+.pill.active { background: var(--green); color: #020617; border-color: var(--green); font-weight: 600; }
+.pill:hover:not(.active) { border-color: var(--green); color: var(--text); }
+
+/* Add-on toggles */
+.addon-list { display: flex; flex-direction: column; gap: 5px; }
+.addon-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 12px;
+}
+.addon-row:hover { border-color: var(--border2); }
+.addon-row.active { border-color: var(--green); background: rgba(34,197,94,0.08); }
+.addon-row input[type="checkbox"] { accent-color: var(--green); width: 14px; height: 14px; }
+.addon-name { flex: 1; margin-left: 8px; color: var(--text); }
+.addon-price { color: var(--green); font-weight: 600; font-size: 11px; }
+
+/* Divider */
+.divider { height: 1px; background: var(--border); margin: 4px 0; }
+
+/* Price panel */
+.price-panel { font-size: 13px; }
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  color: var(--muted);
+}
+.price-row.highlight { color: var(--text); }
+.price-row.total {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  border-top: 1px dashed var(--border2);
+  padding-top: 8px;
+  margin-top: 4px;
+}
+.price-row.total span:last-child { color: var(--green); font-size: 18px; }
+.impact-text {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--blue);
+  line-height: 1.5;
+  padding: 6px 8px;
+  background: rgba(165,180,252,0.08);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(165,180,252,0.15);
+}
+
+/* Inclusions */
+.inclusions-list {
+  font-size: 12px;
+  color: var(--muted);
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.inclusions-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.inclusions-list li::before {
+  content: '✓';
+  color: var(--green);
+  flex-shrink: 0;
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+/* Action buttons */
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.action-btn {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border2);
+  background: var(--bg3);
+  color: var(--text);
+  font-size: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+}
+.action-btn:hover { border-color: var(--green); color: var(--green); }
+.action-btn.primary {
+  background: var(--green);
+  border-color: var(--green);
+  color: #020617;
+  font-weight: 700;
+  grid-column: 1 / -1;
+}
+.action-btn.primary:hover { background: var(--green2); }
+
+.footer-note {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .cfg-grid { grid-template-columns: 1fr; }
+  .cfg-right { max-height: none; }
+  model-viewer { height: 320px; }
+  .render-img { height: 320px; }
+}
+@media (max-width: 480px) {
+  .cfg-wrap { padding: 12px; }
+  .cfg-header { padding: 16px; }
+  .swatch-grid { grid-template-columns: repeat(6, 1fr); }
+  .action-grid { grid-template-columns: 1fr; }
+  .action-btn.primary { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+<!-- HEADER -->
+<div class="cfg-header">
+<div class="badge">Supplier-backed • Transparent Pricing • People Over Profits</div>
+<h1>Tiny Homes WA — 3D Configurator</h1>
+<p>Choose your model, customise your home, and see live pricing. Save or share your design instantly.</p>
+<div class="kpi-row">
+<span class="kpi">CRV / Standard / JTC Pathways</span>
+<span class="kpi">Live Pricing</span>
+<span class="kpi">PDF Export</span>
+<span class="kpi">AR Preview</span>
+<span class="kpi">10% → WA Community</span>
+</div>
+</div>
+<div class="cfg-wrap">
+<div class="cfg-grid">
+<!-- ── LEFT PANEL ── -->
+<div class="cfg-left">
+<!-- Model Size Tabs -->
+<div>
+<div class="section-label">Model Size</div>
+<div class="tab-row" id="modelTabs"></div>
+</div>
+<!-- Build Pathway Tabs -->
+<div>
+<div class="section-label">Build Pathway</div>
+<div class="pathway-row" id="pathwayTabs"></div>
+<div class="pathway-desc" id="pathwayDesc"></div>
+</div>
+<!-- 3D Viewer -->
+<div class="viewer-panel">
+<!-- Viewer tabs -->
+<div class="viewer-tabs">
+<button class="viewer-tab active" data-vtab="3d">🧱 3D Model</button>
+<button class="viewer-tab" data-vtab="render">🖼️ Render</button>
+</div>
+<!-- Loading overlay -->
+<div class="viewer-loading" id="viewerLoading">
+<div class="spinner"></div>
+<div class="loading-text">Loading 3D model...</div>
+</div>
+<!-- AR badge -->
+<div class="ar-badge" id="arBadge" style="display:none">📱 AR Available</div>
+<!-- model-viewer -->
+<model-viewer ar="" ar-modes="webxr scene-viewer quick-look" auto-rotate="false" camera-controls="" environment-image="neutral" exposure="1.1" id="thwaViewer" interaction-prompt="none" loading="eager" shadow-intensity="0.8" src="" touch-action="pan-y">
+</model-viewer>
+<!-- Render image fallback -->
+<img alt="Tiny Homes WA Render" class="render-img" id="renderImg" src="https://static.wixstatic.com/media/9526fd_31ae4dc2457448ab9ae87dfec2a5fe91~mv2.png"/>
+<!-- Camera presets -->
+<div class="camera-bar">
+<button class="cam-btn" data-cam="front">Front</button>
+<button class="cam-btn" data-cam="back">Back</button>
+<button class="cam-btn" data-cam="left">Left</button>
+<button class="cam-btn" data-cam="right">Right</button>
+<button class="cam-btn" data-cam="top">Top</button>
+<button class="cam-btn" data-cam="iso">Isometric</button>
+<button class="cam-btn" data-cam="interior">Interior</button>
+<button class="cam-btn" data-cam="rotate">Auto-Rotate</button>
+</div>
+</div>
+<!-- Share / Deeplink -->
+<div>
+<div class="section-label">Share Your Design</div>
+<div class="share-bar">
+<input class="share-input" id="shareUrl" placeholder="Generate share link..." readonly="" type="text"/>
+<button class="share-copy-btn" id="shareCopyBtn">📋 Copy Link</button>
+<button class="share-copy-btn" id="shareGenBtn">🔗 Generate</button>
+</div>
+</div>
+</div>
+<!-- ── RIGHT PANEL ── -->
+<div class="cfg-right">
+<!-- Exterior Colour -->
+<div>
+<div class="section-label">Exterior Colour</div>
+<div class="swatch-grid" id="colourSwatches"></div>
+</div>
+<!-- Exterior Texture -->
+<div>
+<div class="section-label">Exterior Texture</div>
+<select class="cfg-select" id="textureSelect"></select>
+</div>
+<!-- Roof -->
+<div>
+<div class="section-label">Roof Type</div>
+<div class="pill-row" id="roofPills"></div>
+</div>
+<!-- Kitchen -->
+<div>
+<div class="section-label">Kitchen Layout</div>
+<select class="cfg-select" id="kitchenSelect"></select>
+</div>
+<!-- Bathroom -->
+<div>
+<div class="section-label">Bathroom</div>
+<select class="cfg-select" id="bathroomSelect"></select>
+</div>
+<!-- Flooring -->
+<div>
+<div class="section-label">Flooring</div>
+<select class="cfg-select" id="floorSelect"></select>
+</div>
+<!-- Interior Palette -->
+<div>
+<div class="section-label">Interior Palette</div>
+<div class="pill-row" id="interiorPills"></div>
+</div>
+<!-- Add-ons -->
+<div>
+<div class="section-label">Add-Ons</div>
+<div class="addon-list" id="addonList"></div>
+</div>
+<div class="divider"></div>
+<!-- Pricing Summary -->
+<div class="price-panel" id="pricePanel">
+<div class="price-row"><span>Base Home</span><span id="pBase">$0</span></div>
+<div class="price-row"><span>Pathway Adjustment</span><span id="pPathway">$0</span></div>
+<div class="price-row"><span>Roof</span><span id="pRoof">$0</span></div>
+<div class="price-row"><span>Kitchen</span><span id="pKitchen">$0</span></div>
+<div class="price-row"><span>Bathroom</span><span id="pBathroom">$0</span></div>
+<div class="price-row"><span>Flooring</span><span id="pFloor">$0</span></div>
+<div class="price-row"><span>Interior</span><span id="pInterior">$0</span></div>
+<div class="price-row" id="addonPriceRows"></div>
+<div class="price-row total"><span>Estimated Total</span><span id="pTotal">$0</span></div>
+<div class="impact-text" id="impactText"></div>
+</div>
+<div class="divider"></div>
+<!-- Inclusions -->
+<div>
+<div class="section-label">What's Included</div>
+<ul class="inclusions-list" id="inclusionsList"></ul>
+</div>
+<div class="divider"></div>
+<!-- Actions -->
+<div class="action-grid">
+<button class="action-btn primary" id="btnGetQuote">📩 Get Full Quote</button>
+<button class="action-btn" id="btnPDF">📄 Download PDF</button>
+<button class="action-btn" id="btnCopy">📋 Copy Summary</button>
+<button class="action-btn" id="btnSave">💾 Save Plan</button>
+<button class="action-btn" id="btnReset">↺ Reset</button>
+<button class="action-btn" id="btnSend">📤 Send to Site</button>
+</div>
+<div class="footer-note">
+        This home contributes to Tiny Homes WA's mission of restoring families and building dignified communities across Western Australia.
+      </div>
+</div>
+</div>
+</div>
+<script>
+(function () {
+'use strict';
+
+// ============================================================
+// DATA — Canon-aligned pricing from THWA Cathedral
+// ============================================================
+
+const GLB_URLS = {
+  '20ft': 'https://static.wixstatic.com/3d/9526fd_61e0ee776a424cf3ba603d580790dc90.glb',
+  '30ft': 'https://static.wixstatic.com/3d/9526fd_ae75e1743f1a47ad9acc174719f2f749.glb',
+  '40ft': 'https://static.wixstatic.com/3d/9526fd_6190641f4d1b4475bc0c02770f6caa9d.glb',
+};
+
+const RENDER_URLS = {
+  '20ft': 'https://static.wixstatic.com/media/9526fd_31ae4dc2457448ab9ae87dfec2a5fe91~mv2.png',
+  '30ft': 'https://static.wixstatic.com/media/9526fd_31ae4dc2457448ab9ae87dfec2a5fe91~mv2.png',
+  '40ft': 'https://static.wixstatic.com/media/9526fd_31ae4dc2457448ab9ae87dfec2a5fe91~mv2.png',
+};
+
+const MODELS = [
+  { id: '20ft', label: '20FT Studio', sqm: '18sqm', base: 108585 },
+  { id: '30ft', label: '30FT Studio+', sqm: '28sqm', base: 125000 },
+  { id: '40ft', label: '40FT Family', sqm: '40sqm', base: 145000 },
+];
+
+const PATHWAYS = [
+  { id: 'crv',      label: 'CRV — Charity Ready',    multiplier: 1.00, charityRate: 0.30,
+    desc: 'Core charity-ready spec. Transparent pricing. 30% of profits to WA reunification programs.' },
+  { id: 'standard', label: 'Standard — Turnkey',      multiplier: 1.08, charityRate: 0.20,
+    desc: 'Turnkey residential spec with comfort upgrades and standard inclusions.' },
+  { id: 'jtc',      label: 'Winifred Filamena — JTC', multiplier: 1.18, charityRate: 0.20,
+    desc: 'Premium ceremonial tier with elevated finishes and legacy-grade detailing.' },
+];
+
+const COLOURS = [
+  { id: 'white',      label: 'White',       hex: '#f5f5f5' },
+  { id: 'sand',       label: 'Sand',        hex: '#d7c6a8' },
+  { id: 'charcoal',   label: 'Charcoal',    hex: '#2c2c2c' },
+  { id: 'blue_grey',  label: 'Blue Grey',   hex: '#6b7d8b' },
+  { id: 'forest',     label: 'Forest',      hex: '#2b4d2f' },
+  { id: 'terracotta', label: 'Terracotta',  hex: '#c05a37' },
+];
+
+const TEXTURES = [
+  { id: 'smooth', label: 'Smooth Render', price: 0 },
+  { id: 'timber', label: 'Timber Cladding', price: 0 },
+  { id: 'ribbed', label: 'Ribbed Metal', price: 0 },
+  { id: 'brick',  label: 'Brick Veneer', price: 1200 },
+];
+
+const ROOFS = [
+  { id: 'flat',    label: 'Flat',    price: 0 },
+  { id: 'sloping', label: 'Sloping', price: 17000 },
+  { id: 'skillion',label: 'Skillion',price: 12000 },
+];
+
+const KITCHENS = [
+  { id: 'straight', label: 'Straight',   price: 0 },
+  { id: 'l',        label: 'L-Shaped',   price: 2500 },
+  { id: 'u',        label: 'U-Shaped',   price: 3500 },
+  { id: 'galley',   label: 'Galley',     price: 4000 },
+];
+
+const BATHROOMS = [
+  { id: 'standard', label: 'Standard Ensuite', price: 0 },
+  { id: 'bathtub',  label: 'Custom Bathtub',   price: 1800 },
+  { id: 'accessible', label: 'Accessible',     price: 2200 },
+];
+
+const FLOORING = [
+  { id: 'pvc_oak',     label: 'PVC — Oak Light',     price: 0 },
+  { id: 'pvc_grey',    label: 'PVC — Grey Wash',      price: 0 },
+  { id: 'spc_warm',    label: 'SPC/LVT — Warm Oak',   price: 450 },
+  { id: 'spc_charcoal',label: 'SPC/LVT — Charcoal',   price: 450 },
+  { id: 'bamboo',      label: 'Bamboo Engineered',    price: 850 },
+];
+
+const INTERIORS = [
+  { id: 'light',   label: 'Light Neutral', price: 0 },
+  { id: 'warm',    label: 'Warm Timber',   price: 650 },
+  { id: 'cool',    label: 'Cool Calm',     price: 650 },
+  { id: 'earth',   label: 'Earth & Stone', price: 650 },
+  { id: 'premium', label: 'Premium Designer', price: 1200 },
+];
+
+const ADDONS = [
+  { id: 'porch',        label: 'Front Porch (2×6m)',     price: 9000 },
+  { id: 'deck',         label: 'Deck Extension',          price: 7500 },
+  { id: 'solar_prep',   label: 'Solar Prep',              price: 2200 },
+  { id: 'full_solar',   label: 'Full Solar System',       price: 8500 },
+  { id: 'water',        label: 'Water-Saving Pack',       price: 1250 },
+  { id: 'offgrid',      label: 'Off-Grid Pack',           price: 12000 },
+  { id: 'ramp',         label: 'Accessibility Ramp',      price: 4000 },
+  { id: 'second_floor', label: 'Second Floor',            price: 25000 },
+  { id: 'metal_panels', label: 'Decorative Metal Panels', price: 3800 },
+];
+
+const INCLUSIONS = {
+  '20ft': {
+    crv:      ['Engineered 20FT chassis & structure','Core insulation & weatherproofing','Standard electrical & plumbing','Base kitchen & bathroom fitout','Charity-ready compliance focus'],
+    standard: ['All CRV inclusions','Upgraded interior finishes','Standard appliance allowance','Full bathroom fitout','Exterior cladding & Colorbond roofing'],
+    jtc:      ['All Standard inclusions','Premium interior palette & fixtures','Feature lighting & upgraded hardware','Ceremonial detailing & styling','Priority scheduling & legacy documentation'],
+  },
+  '30ft': {
+    crv:      ['Engineered 30FT chassis & structure','Core insulation & weatherproofing','Standard electrical & plumbing','Separate bedroom zone','Base kitchen & bathroom fitout'],
+    standard: ['All CRV inclusions','Upgraded interior finishes','Standard appliance allowance','Full bathroom fitout','Exterior cladding & Colorbond roofing'],
+    jtc:      ['All Standard inclusions','Premium interior palette & fixtures','Feature lighting & upgraded hardware','Ceremonial detailing & styling','Priority scheduling & legacy documentation'],
+  },
+  '40ft': {
+    crv:      ['Engineered 40FT chassis & structure','Core insulation & weatherproofing','Standard electrical & plumbing','2-bedroom layout','Base kitchen & bathroom fitout'],
+    standard: ['All CRV inclusions','Expanded kitchen & storage zones','Standard appliance allowance','Full bathroom fitout','Exterior cladding & Colorbond roofing'],
+    jtc:      ['All Standard inclusions','Premium interior palette & fixtures','Feature lighting & upgraded hardware','Ceremonial detailing & styling','Priority scheduling & legacy documentation'],
+  },
+};
+
+const CAMERA_ORBITS = {
+  front:    '0deg 75deg 4m',
+  back:     '180deg 75deg 4m',
+  left:     '90deg 75deg 4m',
+  right:    '-90deg 75deg 4m',
+  top:      '0deg 110deg 5m',
+  iso:      '45deg 75deg 4.5m',
+  interior: '0deg 75deg 1.5m',
+};
+
+// ============================================================
+// STATE
+// ============================================================
+
+const state = {
+  modelId:   '20ft',
+  pathway:   'crv',
+  colour:    'white',
+  texture:   'smooth',
+  roof:      'flat',
+  kitchen:   'straight',
+  bathroom:  'standard',
+  floor:     'pvc_oak',
+  interior:  'light',
+  addons:    new Set(),
+  viewMode:  '3d',
+};
+
+// ============================================================
+// HELPERS
+// ============================================================
+
+const $ = id => document.getElementById(id);
+const fmt = n => n.toLocaleString('en-AU', { style: 'currency', currency: 'AUD', maximumFractionDigits: 0 });
+
+function getModel()   { return MODELS.find(m => m.id === state.modelId); }
+function getPathway() { return PATHWAYS.find(p => p.id === state.pathway); }
+
+// ============================================================
+// RENDER UI
+// ============================================================
+
+function renderModelTabs() {
+  const el = $('modelTabs');
+  el.innerHTML = '';
+  MODELS.forEach(m => {
+    const btn = document.createElement('button');
+    btn.className = 'tab-btn' + (m.id === state.modelId ? ' active' : '');
+    btn.innerHTML = `${m.label} <small style="opacity:0.6;font-size:10px">${m.sqm}</small>`;
+    btn.onclick = () => { state.modelId = m.id; renderModelTabs(); loadModel(); updatePricing(); renderInclusions(); };
+    el.appendChild(btn);
+  });
+}
+
+function renderPathwayTabs() {
+  const el = $('pathwayTabs');
+  el.innerHTML = '';
+  PATHWAYS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'pathway-btn' + (p.id === state.pathway ? ' active' : '');
+    btn.textContent = p.label;
+    btn.onclick = () => { state.pathway = p.id; renderPathwayTabs(); updatePricing(); renderInclusions(); };
+    el.appendChild(btn);
+  });
+  $('pathwayDesc').textContent = getPathway()?.desc || '';
+}
+
+function renderColourSwatches() {
+  const el = $('colourSwatches');
+  el.innerHTML = '';
+  COLOURS.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'swatch-btn' + (c.id === state.colour ? ' active' : '');
+    btn.style.background = c.hex;
+    btn.title = c.label;
+    btn.innerHTML = `<span class="swatch-tooltip">${c.label}</span>`;
+    btn.onclick = () => { state.colour = c.id; renderColourSwatches(); };
+    el.appendChild(btn);
+  });
+}
+
+function renderSelect(elId, items, stateKey) {
+  const el = $(elId);
+  el.innerHTML = '';
+  items.forEach(item => {
+    const opt = document.createElement('option');
+    opt.value = item.id;
+    opt.textContent = item.price ? `${item.label} (+${fmt(item.price)})` : item.label;
+    el.appendChild(opt);
+  });
+  el.value = state[stateKey];
+  el.onchange = e => { state[stateKey] = e.target.value; updatePricing(); };
+}
+
+function renderPills(elId, items, stateKey) {
+  const el = $(elId);
+  el.innerHTML = '';
+  items.forEach(item => {
+    const btn = document.createElement('button');
+    btn.className = 'pill' + (item.id === state[stateKey] ? ' active' : '');
+    btn.textContent = item.price ? `${item.label} +${fmt(item.price)}` : item.label;
+    btn.onclick = () => { state[stateKey] = item.id; renderPills(elId, items, stateKey); updatePricing(); };
+    el.appendChild(btn);
+  });
+}
+
+function renderAddons() {
+  const el = $('addonList');
+  el.innerHTML = '';
+  ADDONS.forEach(addon => {
+    const row = document.createElement('label');
+    row.className = 'addon-row' + (state.addons.has(addon.id) ? ' active' : '');
+    row.innerHTML = `
+      <input type="checkbox" ${state.addons.has(addon.id) ? 'checked' : ''} />
+      <span class="addon-name">${addon.label}</span>
+      <span class="addon-price">+${fmt(addon.price)}</span>
+    `;
+    row.querySelector('input').onchange = e => {
+      if (e.target.checked) state.addons.add(addon.id);
+      else state.addons.delete(addon.id);
+      row.classList.toggle('active', e.target.checked);
+      updatePricing();
+    };
+    el.appendChild(row);
+  });
+}
+
+function renderInclusions() {
+  const ul = $('inclusionsList');
+  ul.innerHTML = '';
+  const list = (INCLUSIONS[state.modelId] || {})[state.pathway] || [];
+  list.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    ul.appendChild(li);
+  });
+}
+
+// ============================================================
+// PRICING ENGINE
+// ============================================================
+
+function calcPricing() {
+  const model   = getModel();
+  const pathway = getPathway();
+  const baseRaw = model.base;
+  const base    = Math.round(baseRaw * pathway.multiplier);
+  const pathwayDelta = base - baseRaw;
+
+  const roofP     = ROOFS.find(r => r.id === state.roof)?.price || 0;
+  const kitchenP  = KITCHENS.find(k => k.id === state.kitchen)?.price || 0;
+  const bathroomP = BATHROOMS.find(b => b.id === state.bathroom)?.price || 0;
+  const floorP    = FLOORING.find(f => f.id === state.floor)?.price || 0;
+  const interiorP = INTERIORS.find(i => i.id === state.interior)?.price || 0;
+  const textureP  = TEXTURES.find(t => t.id === state.texture)?.price || 0;
+
+  let addonsTotal = 0;
+  const addonBreakdown = [];
+  state.addons.forEach(id => {
+    const addon = ADDONS.find(a => a.id === id);
+    if (addon) { addonsTotal += addon.price; addonBreakdown.push(addon); }
+  });
+
+  const subtotal = base + roofP + kitchenP + bathroomP + floorP + interiorP + textureP + addonsTotal;
+  const charity  = subtotal * pathway.charityRate;
+
+  return { baseRaw, base, pathwayDelta, roofP, kitchenP, bathroomP, floorP, interiorP, textureP, addonsTotal, addonBreakdown, subtotal, charity };
+}
+
+function updatePricing() {
+  const p = calcPricing();
+  $('pBase').textContent    = fmt(p.baseRaw);
+  $('pPathway').textContent = p.pathwayDelta > 0 ? `+${fmt(p.pathwayDelta)}` : fmt(p.pathwayDelta);
+  $('pRoof').textContent    = fmt(p.roofP);
+  $('pKitchen').textContent = fmt(p.kitchenP);
+  $('pBathroom').textContent= fmt(p.bathroomP);
+  $('pFloor').textContent   = fmt(p.floorP);
+  $('pInterior').textContent= fmt(p.interiorP);
+
+  // Addon price rows
+  const addonRows = $('addonPriceRows');
+  addonRows.innerHTML = '';
+  p.addonBreakdown.forEach(addon => {
+    const row = document.createElement('div');
+    row.className = 'price-row';
+    row.innerHTML = `<span>${addon.label}</span><span>${fmt(addon.price)}</span>`;
+    addonRows.appendChild(row);
+  });
+
+  $('pTotal').textContent = fmt(p.subtotal);
+  $('impactText').textContent = `This configuration contributes an estimated ${fmt(p.charity)} to WA reunification and community impact programs.`;
+}
+
+// ============================================================
+// 3D MODEL LOADING
+// ============================================================
+
+function loadModel() {
+  const viewer  = $('thwaViewer');
+  const loading = $('viewerLoading');
+  const arBadge = $('arBadge');
+
+  loading.classList.remove('hidden');
+
+  const glbUrl = GLB_URLS[state.modelId];
+  viewer.src = glbUrl;
+
+  viewer.addEventListener('load', () => {
+    loading.classList.add('hidden');
+    // Show AR badge if AR is available
+    if (viewer.canActivateAR) {
+      arBadge.style.display = 'block';
+    }
+  }, { once: true });
+
+  viewer.addEventListener('error', () => {
+    loading.classList.add('hidden');
+    loading.querySelector('.loading-text').textContent = 'Model unavailable — showing render';
+  }, { once: true });
+
+  // Update render image
+  $('renderImg').src = RENDER_URLS[state.modelId];
+}
+
+// ============================================================
+// VIEWER TABS
+// ============================================================
+
+document.querySelectorAll('.viewer-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.viewer-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    state.viewMode = tab.dataset.vtab;
+    const viewer   = $('thwaViewer');
+    const renderImg = $('renderImg');
+    if (state.viewMode === '3d') {
+      viewer.style.display = 'block';
+      renderImg.classList.remove('active');
+    } else {
+      viewer.style.display = 'none';
+      renderImg.classList.add('active');
+    }
+  });
+});
+
+// ============================================================
+// CAMERA PRESETS
+// ============================================================
+
+document.querySelectorAll('.cam-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const viewer = $('thwaViewer');
+    const key = btn.dataset.cam;
+    if (key === 'rotate') {
+      viewer.autoRotate = !viewer.autoRotate;
+      btn.textContent = viewer.autoRotate ? 'Stop Rotate' : 'Auto-Rotate';
+    } else if (CAMERA_ORBITS[key]) {
+      viewer.cameraOrbit = CAMERA_ORBITS[key];
+      viewer.autoRotate = false;
+    }
+  });
+});
+
+// ============================================================
+// SHARE / DEEPLINK
+// ============================================================
+
+function generateDeeplink() {
+  const params = new URLSearchParams({
+    m: state.modelId,
+    p: state.pathway,
+    c: state.colour,
+    t: state.texture,
+    r: state.roof,
+    k: state.kitchen,
+    b: state.bathroom,
+    f: state.floor,
+    i: state.interior,
+    a: Array.from(state.addons).join(','),
+  });
+  return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+}
+
+function restoreFromDeeplink() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('m')) state.modelId  = params.get('m');
+  if (params.has('p')) state.pathway  = params.get('p');
+  if (params.has('c')) state.colour   = params.get('c');
+  if (params.has('t')) state.texture  = params.get('t');
+  if (params.has('r')) state.roof     = params.get('r');
+  if (params.has('k')) state.kitchen  = params.get('k');
+  if (params.has('b')) state.bathroom = params.get('b');
+  if (params.has('f')) state.floor    = params.get('f');
+  if (params.has('i')) state.interior = params.get('i');
+  if (params.has('a') && params.get('a')) {
+    params.get('a').split(',').forEach(id => state.addons.add(id));
+  }
+}
+
+$('shareGenBtn').onclick = () => {
+  const url = generateDeeplink();
+  $('shareUrl').value = url;
+};
+
+$('shareCopyBtn').onclick = () => {
+  const url = $('shareUrl').value || generateDeeplink();
+  $('shareUrl').value = url;
+  navigator.clipboard.writeText(url).then(() => {
+    $('shareCopyBtn').textContent = '✅ Copied!';
+    setTimeout(() => ($('shareCopyBtn').textContent = '📋 Copy Link'), 1500);
+  });
+};
+
+// ============================================================
+// EXPORT FUNCTIONS
+// ============================================================
+
+function getSummaryText() {
+  const model   = getModel();
+  const pathway = getPathway();
+  const p = calcPricing();
+  const addonNames = Array.from(state.addons).map(id => ADDONS.find(a => a.id === id)?.label).filter(Boolean);
+  return [
+    'Tiny Homes WA — Configuration Summary',
+    '',
+    `Model: ${model.label} (${model.sqm})`,
+    `Build Pathway: ${pathway.label}`,
+    `Exterior Colour: ${COLOURS.find(c => c.id === state.colour)?.label}`,
+    `Exterior Texture: ${TEXTURES.find(t => t.id === state.texture)?.label}`,
+    `Roof: ${ROOFS.find(r => r.id === state.roof)?.label}`,
+    `Kitchen: ${KITCHENS.find(k => k.id === state.kitchen)?.label}`,
+    `Bathroom: ${BATHROOMS.find(b => b.id === state.bathroom)?.label}`,
+    `Flooring: ${FLOORING.find(f => f.id === state.floor)?.label}`,
+    `Interior: ${INTERIORS.find(i => i.id === state.interior)?.label}`,
+    `Add-Ons: ${addonNames.length ? addonNames.join(', ') : 'None'}`,
+    '',
+    `Base Home: ${fmt(p.baseRaw)}`,
+    `Pathway Adjustment: ${fmt(p.pathwayDelta)}`,
+    `Add-Ons Total: ${fmt(p.addonsTotal)}`,
+    `Estimated Total: ${fmt(p.subtotal)}`,
+    '',
+    `Community Impact: ${fmt(p.charity)} contributed to WA programs`,
+    '',
+    'This home contributes to Tiny Homes WA\'s mission of restoring families and building dignified communities.',
+  ].join('\n');
+}
+
+$('btnCopy').onclick = () => {
+  navigator.clipboard.writeText(getSummaryText()).then(() => {
+    $('btnCopy').textContent = '✅ Copied!';
+    setTimeout(() => ($('btnCopy').textContent = '📋 Copy Summary'), 1500);
+  });
+};
+
+$('btnPDF').onclick = () => {
+  if (!window.jspdf) { alert('PDF library loading... please try again.'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.text('Tiny Homes WA — Build Summary', 14, 18);
+  doc.setFontSize(11);
+  const lines = getSummaryText().split('\n');
+  doc.text(lines, 14, 30);
+  doc.save('TinyHomesWA_BuildSummary.pdf');
+};
+
+$('btnSave').onclick = () => {
+  const payload = {
+    state: { ...state, addons: Array.from(state.addons) },
+    savedAt: new Date().toISOString(),
+  };
+  localStorage.setItem('thwa_plan', JSON.stringify(payload));
+  $('btnSave').textContent = '✅ Saved!';
+  setTimeout(() => ($('btnSave').textContent = '💾 Save Plan'), 1500);
+};
+
+$('btnSend').onclick = () => {
+  const p = calcPricing();
+  const payload = {
+    type: 'thwaConfiguratorQuote',
+    timestamp: new Date().toISOString(),
+    modelId: state.modelId,
+    pathway: state.pathway,
+    summary: getSummaryText(),
+    total: fmt(p.subtotal),
+    charity: fmt(p.charity),
+  };
+  window.parent.postMessage(payload, '*');
+  $('btnSend').textContent = '✅ Sent!';
+  setTimeout(() => ($('btnSend').textContent = '📤 Send to Site'), 1500);
+};
+
+$('btnGetQuote').onclick = () => {
+  const p = calcPricing();
+  const payload = {
+    type: 'thwaGetQuote',
+    total: fmt(p.subtotal),
+    summary: getSummaryText(),
+  };
+  window.parent.postMessage(payload, '*');
+  // Also try to navigate to contact page
+  if (window.parent !== window) {
+    window.parent.postMessage({ type: 'thwaNavigate', url: '/contact' }, '*');
+  } else {
+    window.location.href = '/contact?quote=1';
+  }
+};
+
+$('btnReset').onclick = () => {
+  state.modelId  = '20ft';
+  state.pathway  = 'crv';
+  state.colour   = 'white';
+  state.texture  = 'smooth';
+  state.roof     = 'flat';
+  state.kitchen  = 'straight';
+  state.bathroom = 'standard';
+  state.floor    = 'pvc_oak';
+  state.interior = 'light';
+  state.addons   = new Set();
+  init();
+};
+
+// ============================================================
+// RESTORE SAVED PLAN
+// ============================================================
+
+function restoreSavedPlan() {
+  try {
+    const saved = localStorage.getItem('thwa_plan');
+    if (saved) {
+      const payload = JSON.parse(saved);
+      if (payload?.state) {
+        Object.assign(state, payload.state);
+        if (Array.isArray(state.addons)) {
+          state.addons = new Set(state.addons);
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('THWA plan restore failed', e);
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+
+function init() {
+  renderModelTabs();
+  renderPathwayTabs();
+  renderColourSwatches();
+  renderSelect('textureSelect', TEXTURES, 'texture');
+  renderPills('roofPills', ROOFS, 'roof');
+  renderSelect('kitchenSelect', KITCHENS, 'kitchen');
+  renderSelect('bathroomSelect', BATHROOMS, 'bathroom');
+  renderSelect('floorSelect', FLOORING, 'floor');
+  renderPills('interiorPills', INTERIORS, 'interior');
+  renderAddons();
+  renderInclusions();
+  updatePricing();
+  loadModel();
+}
+
+// Boot sequence
+restoreFromDeeplink();
+restoreSavedPlan();
+init();
+
+})();
+</script>
+</body>
+</html>
