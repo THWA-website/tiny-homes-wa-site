@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tiny Homes WA — Sustainable, Affordable, Beautiful Homes</title>
+<meta content="Australia's leading expandable modular home builder. Studio 20, Studio 30, Studio 40 — designed for Western Australian living. Configure online, delivered in 12–16 weeks." name="description"/>
+<meta content="Tiny Homes WA — Sustainable, Affordable, Beautiful Homes" property="og:title"/>
+<meta content="Configure your dream home online. Starting from $108,585 fully installed. 12–16 weeks delivery across WA." property="og:description"/>
+<meta content="https://tinyhomeswa.com.au" property="og:url"/>
+<meta content="website" property="og:type"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+/* ============================================================
+   TINY HOMES WA — HOMEPAGE
+   Authority: Jason Thomas Cawley
+   Brand: People Over Profits
+   ============================================================ */
+
+:root {
+  --green:       #2C5530;
+  --green-dark:  #1e3a21;
+  --green-light: #3d7a45;
+  --green-pale:  #f0f7f0;
+  --accent:      #D4A574;
+  --text-dark:   #1a2332;
+  --text-body:   #2C3E50;
+  --text-light:  #7F8C8D;
+  --text-muted:  #95a5a6;
+  --white:       #FFFFFF;
+  --bg-light:    #F8F9FA;
+  --border:      #E8ECEF;
+  --shadow:      0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:   0 10px 30px rgba(0,0,0,0.12);
+  --shadow-xl:   0 20px 60px rgba(0,0,0,0.15);
+  --radius:      10px;
+  --radius-lg:   16px;
+  --radius-xl:   24px;
+  --transition:  all 0.25s ease;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-body);
+  line-height: 1.6;
+  background: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 80px 0; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; border-radius: var(--radius);
+  font-weight: 600; font-size: 0.95rem; transition: var(--transition);
+  border: 2px solid transparent; cursor: pointer; white-space: nowrap;
+}
+.btn-primary { background: var(--green); color: white; border-color: var(--green); }
+.btn-primary:hover { background: var(--green-dark); border-color: var(--green-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(44,85,48,0.3); }
+.btn-outline { background: transparent; color: var(--green); border-color: var(--green); }
+.btn-outline:hover { background: var(--green); color: white; transform: translateY(-2px); }
+.btn-white { background: white; color: var(--green); border-color: white; }
+.btn-white:hover { background: var(--bg-light); }
+.btn-outline-white { background: transparent; color: white; border-color: rgba(255,255,255,0.7); }
+.btn-outline-white:hover { background: white; color: var(--green); border-color: white; }
+.btn-lg { padding: 16px 36px; font-size: 1.05rem; }
+.btn-xl { padding: 18px 44px; font-size: 1.1rem; }
+
+/* ── SECTION HEADERS ── */
+.section-tag {
+  display: inline-block; background: var(--green-pale); color: var(--green);
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 5px 14px; border-radius: 999px; margin-bottom: 16px;
+  border: 1px solid rgba(44,85,48,0.15);
+}
+.section-title { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 800; color: var(--text-dark); line-height: 1.2; margin-bottom: 16px; }
+.section-subtitle { font-size: 1.05rem; color: var(--text-light); max-width: 600px; line-height: 1.7; }
+.section-header { text-align: center; margin-bottom: 48px; }
+.section-header .section-subtitle { margin: 0 auto; }
+
+/* ── HEADER ── */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+  background: white; box-shadow: 0 1px 0 var(--border);
+  transition: var(--transition);
+}
+.site-header.scrolled { box-shadow: var(--shadow); }
+.header-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+  height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.header-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.header-logo-icon {
+  width: 38px; height: 38px; background: var(--green); border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 800; font-size: 0.8rem; flex-shrink: 0;
+}
+.header-logo-text { font-size: 1rem; font-weight: 700; color: var(--green); line-height: 1.2; }
+.header-logo-sub { font-size: 0.6rem; color: var(--text-muted); font-weight: 400; }
+.header-nav { display: flex; align-items: center; gap: 4px; }
+.nav-link {
+  padding: 8px 14px; font-size: 0.875rem; font-weight: 500; color: var(--text-body);
+  border-radius: 8px; transition: var(--transition);
+}
+.nav-link:hover { color: var(--green); background: var(--green-pale); }
+.header-actions { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.header-phone { font-size: 0.875rem; font-weight: 500; color: var(--text-body); transition: var(--transition); }
+.header-phone:hover { color: var(--green); }
+.mobile-toggle { display: none; flex-direction: column; gap: 4px; background: none; border: none; padding: 8px; cursor: pointer; }
+.mobile-toggle span { width: 22px; height: 2px; background: var(--text-body); border-radius: 2px; display: block; transition: var(--transition); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  position: relative; overflow: hidden; padding-top: 72px;
+  background: linear-gradient(135deg, var(--green) 0%, #1a3d1e 50%, #0d2410 100%);
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+}
+.hero-bg img { width: 100%; height: 100%; object-fit: cover; opacity: 0.15; }
+.hero-bg-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(44,85,48,0.92) 0%, rgba(13,36,16,0.88) 100%);
+}
+.hero-content {
+  position: relative; z-index: 1; color: white;
+  padding: 80px 0; max-width: 680px;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+  color: white; font-size: 0.8rem; font-weight: 600; padding: 6px 16px;
+  border-radius: 999px; margin-bottom: 24px; backdrop-filter: blur(8px);
+}
+.hero-badge::before { content: '🌿'; }
+.hero-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800;
+  line-height: 1.1; margin-bottom: 24px; letter-spacing: -0.02em;
+}
+.hero-title span { color: #8FBC8F; }
+.hero-subtitle {
+  font-size: clamp(1rem, 2vw, 1.2rem); opacity: 0.9;
+  margin-bottom: 32px; line-height: 1.7; max-width: 540px;
+}
+.hero-stats {
+  display: flex; align-items: center; gap: 24px;
+  margin-bottom: 40px; flex-wrap: wrap;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num { display: block; font-size: 1.75rem; font-weight: 800; color: white; line-height: 1; }
+.hero-stat-lbl { font-size: 0.75rem; opacity: 0.7; margin-top: 4px; }
+.hero-stat-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.2); }
+.hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+.hero-scroll {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: rgba(255,255,255,0.5); font-size: 0.7rem; animation: bounce 2s infinite;
+}
+.hero-scroll-arrow { width: 18px; height: 18px; border-right: 2px solid rgba(255,255,255,0.4); border-bottom: 2px solid rgba(255,255,255,0.4); transform: rotate(45deg); }
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(8px)} }
+
+/* ── TRUST BAR ── */
+.trust-bar { background: white; border-bottom: 1px solid var(--border); padding: 20px 0; }
+.trust-items { display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap; }
+.trust-item { display: flex; align-items: center; gap: 10px; font-size: 0.875rem; font-weight: 500; color: var(--text-body); white-space: nowrap; }
+.trust-item svg { color: var(--green); flex-shrink: 0; }
+
+/* ── PRODUCTS ── */
+.products-section { background: var(--bg-light); }
+.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
+.product-card {
+  background: white; border-radius: var(--radius-lg); overflow: hidden;
+  box-shadow: var(--shadow); transition: all 0.3s ease; border: 1px solid var(--border);
+}
+.product-card:hover { transform: translateY(-8px); box-shadow: var(--shadow-xl); }
+.product-image { position: relative; aspect-ratio: 4/3; overflow: hidden; background: var(--bg-light); }
+.product-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.product-card:hover .product-image img { transform: scale(1.05); }
+.product-badge {
+  position: absolute; top: 16px; left: 16px;
+  padding: 4px 12px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+}
+.badge-popular { background: var(--green); color: white; }
+.badge-new { background: var(--accent); color: white; }
+.badge-family { background: #3B82F6; color: white; }
+.product-overlay {
+  position: absolute; inset: 0; background: rgba(26,35,50,0.7);
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  opacity: 0; transition: var(--transition);
+}
+.product-card:hover .product-overlay { opacity: 1; }
+.product-info { padding: 24px; }
+.product-series { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--green); margin-bottom: 6px; }
+.product-name { font-size: 1.4rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+.product-desc { font-size: 0.875rem; color: var(--text-light); line-height: 1.6; margin-bottom: 16px; }
+.product-specs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.spec {
+  display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--text-body);
+  background: var(--bg-light); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border);
+}
+.spec svg { color: var(--green); }
+.product-price {
+  display: flex; align-items: baseline; gap: 6px; margin-bottom: 20px;
+  padding: 12px; background: var(--green-pale); border-radius: var(--radius);
+  border: 1px solid rgba(44,85,48,0.1);
+}
+.price-from { font-size: 0.8rem; color: var(--text-light); }
+.price-amount { font-size: 1.5rem; font-weight: 800; color: var(--green); }
+.price-note { font-size: 0.72rem; color: var(--text-muted); }
+.product-cta {
+  display: block; width: 100%; padding: 12px; text-align: center;
+  background: var(--green); color: white; border-radius: var(--radius);
+  font-weight: 600; font-size: 0.9rem; transition: var(--transition);
+}
+.product-cta:hover { background: var(--green-dark); }
+.products-footer { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+
+/* ── MISSION STRIP ── */
+.mission-strip {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+  padding: 60px 0; color: white; text-align: center;
+}
+.mission-strip h2 { font-size: clamp(1.5rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 16px; }
+.mission-strip p { font-size: 1.05rem; opacity: 0.85; max-width: 700px; margin: 0 auto 32px; line-height: 1.7; }
+.mission-stats { display: flex; justify-content: center; gap: 48px; flex-wrap: wrap; margin-bottom: 40px; }
+.mission-stat-num { display: block; font-size: 2.5rem; font-weight: 800; color: #8FBC8F; line-height: 1; }
+.mission-stat-lbl { font-size: 0.8rem; opacity: 0.7; margin-top: 6px; }
+
+/* ── HOW IT WORKS ── */
+.how-it-works { background: white; }
+.steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.step-card { text-align: center; padding: 32px 20px; border-radius: var(--radius-lg); transition: var(--transition); }
+.step-card:hover { background: var(--green-pale); transform: translateY(-4px); }
+.step-number { font-size: 3rem; font-weight: 800; color: rgba(44,85,48,0.1); line-height: 1; margin-bottom: 16px; }
+.step-icon {
+  width: 64px; height: 64px; background: var(--green-pale); border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+  color: var(--green); border: 1px solid rgba(44,85,48,0.15);
+}
+.step-card h3 { font-size: 1.05rem; font-weight: 700; color: var(--text-dark); margin-bottom: 10px; }
+.step-card p { font-size: 0.875rem; color: var(--text-light); line-height: 1.6; }
+
+/* ── SUSTAINABILITY ── */
+.sustainability-section { background: var(--bg-light); }
+.sus-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+.sus-content .section-tag { margin-bottom: 16px; }
+.sus-content h2 { font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 800; color: var(--text-dark); margin-bottom: 16px; line-height: 1.2; }
+.sus-content p { color: var(--text-light); line-height: 1.7; margin-bottom: 32px; }
+.sus-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+.sus-stat { background: white; border-radius: var(--radius); padding: 20px; text-align: center; border: 1px solid var(--border); }
+.sus-stat-val { font-size: 1.75rem; font-weight: 800; color: var(--green); line-height: 1; margin-bottom: 6px; }
+.sus-stat-lbl { font-size: 0.75rem; color: var(--text-light); line-height: 1.4; }
+.sus-visual { position: relative; }
+.sus-visual img { border-radius: var(--radius-xl); width: 100%; aspect-ratio: 4/3; object-fit: cover; box-shadow: var(--shadow-xl); }
+.sus-badge {
+  position: absolute; bottom: 24px; left: 24px;
+  background: white; border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600;
+  color: var(--green); box-shadow: var(--shadow-lg);
+}
+
+/* ── TESTIMONIALS ── */
+.testimonials-section { background: white; }
+.testimonials-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+.testimonial-card { background: var(--bg-light); border-radius: var(--radius-lg); padding: 32px; border: 1px solid var(--border); transition: var(--transition); }
+.testimonial-card:hover { border-color: var(--green); box-shadow: var(--shadow-lg); }
+.testimonial-card.featured { background: var(--green-pale); border-color: rgba(44,85,48,0.2); }
+.testimonial-stars { color: #f59e0b; font-size: 1rem; margin-bottom: 16px; letter-spacing: 2px; }
+.testimonial-card blockquote { font-size: 0.9rem; line-height: 1.7; color: var(--text-body); margin-bottom: 24px; font-style: italic; }
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.author-avatar { width: 40px; height: 40px; background: var(--green); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+.author-info strong { display: block; font-size: 0.875rem; color: var(--text-dark); }
+.author-info span { font-size: 0.75rem; color: var(--text-muted); }
+
+/* ── FAQ ── */
+.faq-section { background: var(--bg-light); }
+.faq-inner { display: grid; grid-template-columns: 1fr 2fr; gap: 64px; align-items: start; }
+.faq-header .section-tag { margin-bottom: 16px; }
+.faq-header h2 { font-size: 2rem; font-weight: 800; color: var(--text-dark); margin-bottom: 12px; }
+.faq-header p { color: var(--text-light); margin-bottom: 24px; line-height: 1.6; }
+.faq-item { background: white; border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 12px; overflow: hidden; }
+.faq-question {
+  width: 100%; display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px; background: none; border: none; font-size: 0.95rem; font-weight: 600;
+  color: var(--text-dark); text-align: left; cursor: pointer; transition: var(--transition);
+}
+.faq-question:hover { color: var(--green); }
+.faq-question[aria-expanded="true"] { color: var(--green); }
+.faq-question[aria-expanded="true"] svg { transform: rotate(180deg); }
+.faq-question svg { transition: var(--transition); flex-shrink: 0; color: var(--text-muted); }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+.faq-answer.open { max-height: 300px; }
+.faq-answer p { padding: 0 24px 20px; font-size: 0.875rem; color: var(--text-light); line-height: 1.7; }
+
+/* ── FINAL CTA ── */
+.final-cta {
+  background: linear-gradient(135deg, #1a2332 0%, var(--green) 100%);
+  padding: 100px 0; text-align: center; color: white;
+}
+.final-cta h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; margin-bottom: 16px; }
+.final-cta p { font-size: 1.1rem; opacity: 0.8; margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; }
+.final-cta-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.final-cta-note { font-size: 0.8rem; opacity: 0.5; }
+
+/* ── FOOTER ── */
+.site-footer { background: #1a2332; color: #b0bec5; }
+.footer-main { padding: 60px 0 40px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 48px; }
+.footer-brand {}
+.footer-logo-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.footer-logo-icon { width: 38px; height: 38px; background: var(--green); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: 0.8rem; flex-shrink: 0; }
+.footer-logo-name { font-size: 1rem; font-weight: 700; color: white; }
+.footer-brand-desc { font-size: 0.875rem; line-height: 1.7; margin-bottom: 24px; color: #90a4ae; }
+.footer-social { display: flex; gap: 8px; }
+.footer-social a { width: 36px; height: 36px; background: rgba(255,255,255,0.08); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #90a4ae; transition: var(--transition); }
+.footer-social a:hover { background: var(--green); color: white; }
+.footer-col h4 { font-size: 0.875rem; font-weight: 600; color: white; margin-bottom: 20px; }
+.footer-links { display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-size: 0.875rem; color: #90a4ae; transition: var(--transition); }
+.footer-links a:hover { color: white; padding-left: 4px; }
+.footer-bottom { padding: 20px 0; background: #111b27; }
+.footer-bottom-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.footer-copyright { font-size: 0.8rem; color: #78909c; }
+.footer-legal { display: flex; gap: 24px; }
+.footer-legal a { font-size: 0.8rem; color: #78909c; transition: var(--transition); }
+.footer-legal a:hover { color: white; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1024px) {
+  .products-grid { grid-template-columns: repeat(2, 1fr); }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .sus-inner { grid-template-columns: 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr 1fr; }
+  .faq-inner { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 768px) {
+  .section { padding: 60px 0; }
+  .header-nav, .header-phone { display: none; }
+  .mobile-toggle { display: flex; }
+  .products-grid { grid-template-columns: 1fr; }
+  .steps-grid { grid-template-columns: 1fr 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .sus-stats { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-bottom-inner { flex-direction: column; text-align: center; }
+  .footer-legal { flex-wrap: wrap; justify-content: center; }
+  .hero-stats { gap: 16px; }
+  .mission-stats { gap: 32px; }
+}
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+  .steps-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .btn-xl { padding: 14px 28px; font-size: 0.95rem; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+:focus-visible { outline: 2px solid var(--green); outline-offset: 3px; }
+</style>
+</head>
+<body>
+<!-- ── HEADER ── -->
+<header class="site-header" id="site-header">
+<div class="header-inner">
+<a class="header-logo" href="/">
+<div class="header-logo-icon">TW</div>
+<div>
+<div class="header-logo-text">Tiny Homes WA</div>
+<div class="header-logo-sub">tinyhomeswa.com.au</div>
+</div>
+</a>
+<nav aria-label="Main navigation" class="header-nav">
+<a class="nav-link" href="/products">Our Homes</a>
+<a class="nav-link" href="/configurator">3D Configurator</a>
+<a class="nav-link" href="/gallery">Gallery</a>
+<a class="nav-link" href="/services">Services</a>
+<a class="nav-link" href="/about">About</a>
+<a class="nav-link" href="/contact">Contact</a>
+</nav>
+<div class="header-actions">
+<a class="header-phone" href="tel:+611800TINYWA">1800 TINY WA</a>
+<a class="btn btn-primary" href="/configurator" style="padding:10px 20px;font-size:0.875rem">Start Designing</a>
+<button aria-label="Toggle menu" class="mobile-toggle" id="mobile-toggle">
+<span></span><span></span><span></span>
+</button>
+</div>
+</div>
+</header>
+<!-- ── HERO ── -->
+<section class="hero" id="hero">
+<div class="hero-bg">
+<img alt="Tiny Homes WA" loading="eager" src="https://static.wixstatic.com/media/9526fd_31ae4dc2457448ab9ae87dfec2a5fe91~mv2.png"/>
+<div class="hero-bg-overlay"></div>
+</div>
+<div class="container">
+<div class="hero-content">
+<div class="hero-badge">Australia's Leading Modular Home Builder</div>
+<h1 class="hero-title">
+        Build Your Dream<br/>
+<span>Tiny Home.</span><br/>
+        Live Your Best Life.
+      </h1>
+<p class="hero-subtitle">
+        Sustainable, affordable, and beautifully designed expandable homes for modern Western Australian living. Fully installed, NCC 2022 compliant, delivered in 12–16 weeks.
+      </p>
+<div class="hero-stats">
+<div class="hero-stat">
+<span class="hero-stat-num">500+</span>
+<span class="hero-stat-lbl">Homes Delivered</span>
+</div>
+<div class="hero-stat-divider"></div>
+<div class="hero-stat">
+<span class="hero-stat-num">98%</span>
+<span class="hero-stat-lbl">Satisfaction Rate</span>
+</div>
+<div class="hero-stat-divider"></div>
+<div class="hero-stat">
+<span class="hero-stat-num">12–16</span>
+<span class="hero-stat-lbl">Weeks Delivery</span>
+</div>
+<div class="hero-stat-divider"></div>
+<div class="hero-stat">
+<span class="hero-stat-num">20%</span>
+<span class="hero-stat-lbl">Back to Community</span>
+</div>
+</div>
+<div class="hero-buttons">
+<a class="btn btn-white btn-lg" href="/configurator">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          Start Designing
+        </a>
+<a class="btn btn-outline-white btn-lg" href="/products">Explore Our Homes</a>
+</div>
+</div>
+</div>
+<div class="hero-scroll">
+<span>Scroll to explore</span>
+<div class="hero-scroll-arrow"></div>
+</div>
+</section>
+<!-- ── TRUST BAR ── -->
+<section class="trust-bar">
+<div class="container">
+<div class="trust-items">
+<div class="trust-item">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        NCC 2022 Compliant
+      </div>
+<div class="trust-item">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><circle cx="12" cy="12" r="10"></circle><path d="M9 12l2 2 4-4"></path></svg>
+        10-Year Structural Warranty
+      </div>
+<div class="trust-item">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        Australian Made
+      </div>
+<div class="trust-item">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+        12–16 Week Delivery
+      </div>
+<div class="trust-item">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M9 12l2 2 4-4"></path></svg>
+        Fully Licensed &amp; Insured
+      </div>
+<div class="trust-item">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+        People Over Profits
+      </div>
+</div>
+</div>
+</section>
+<!-- ── PRODUCTS ── -->
+<section class="section products-section" id="products">
+<div class="container">
+<div class="section-header">
+<div class="section-tag">Our Collection</div>
+<h2 class="section-title">Find Your Perfect Home</h2>
+<p class="section-subtitle">From compact studios to spacious family homes — every model is built to the same uncompromising standard, fully installed across Western Australia.</p>
+</div>
+<div class="products-grid">
+<!-- Studio 20 -->
+<div class="product-card">
+<div class="product-image">
+<img alt="Studio 20 — Tiny Homes WA" loading="lazy" src="https://static.wixstatic.com/media/9526fd_31ae4dc2457448ab9ae87dfec2a5fe91~mv2.png"/>
+<div class="product-badge badge-popular">Most Popular</div>
+<div class="product-overlay">
+<a class="btn btn-white" href="/products/studio-20" style="padding:10px 18px;font-size:0.85rem">View Details</a>
+<a class="btn btn-primary" href="/configurator?model=studio20" style="padding:10px 18px;font-size:0.85rem">Configure</a>
+</div>
+</div>
+<div class="product-info">
+<div class="product-series">Studio Series</div>
+<h3 class="product-name">Studio 20</h3>
+<p class="product-desc">Perfect for home offices, granny flats, or investment properties. 20.1m² of smart, efficient living — compact, clever, and completely liveable.</p>
+<div class="product-specs">
+<span class="spec">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><rect height="18" rx="2" width="18" x="3" y="3"></rect></svg>
+              20.1 m²
+            </span>
+<span class="spec">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+              Studio
+            </span>
+<span class="spec">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2"></path></svg>
+              Solar Ready
+            </span>
+<span class="spec">6-Star Energy</span>
+</div>
+<div class="product-price">
+<span class="price-from">From</span>
+<span class="price-amount">$108,585</span>
+<span class="price-note">fully installed</span>
+</div>
+<a class="product-cta" href="/products/studio-20">Explore Studio 20</a>
+</div>
+</div>
+<!-- Studio 30 -->
+<div class="product-card">
+<div class="product-image">
+<img alt="Studio 30 — Tiny Homes WA" loading="lazy" src="https://static.wixstatic.com/media/9526fd_31ae4dc2457448ab9ae87dfec2a5fe91~mv2.png"/>
+<div class="product-badge badge-new">New Model</div>
+<div class="product-overlay">
+<a class="btn btn-white" href="/products/studio-30" style="padding:10px 18px;font-size:0.85rem">View Details</a>
+<a class="btn btn-primary" href="/configurator?model=studio30" style="padding:10px 18px;font-size:0.85rem">Configure</a>
+</div>
+</div>
+<div class="product-info">
+<div class="product-series">Studio Series</div>
+<h3 class="product-name">Studio 30</h3>
+<p class="product-desc">Generous 58.1m² with a separate bedroom zone, full kitchen with island bench, and enhanced living space. The perfect balance of size and affordability.</p>
+<div class="product-specs">
+<span class="spec">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><rect height="18" rx="2" width="18" x="3" y="3"></rect></svg>
+              58.1 m²
+            </span>
+<span class="spec">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+              1 Bedroom
+            </span>
+<span class="spec">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              Premium
+            </span>
+<span class="spec">4 Persons</span>
+</div>
+<div class="product-price">
+<span class="price-from">From</span>
+<span class="price-amount">$125,000</span>
+<span class="price-note">fully installed</span>
+</div>
+<a class="product-cta" href="/products/studio-30">Explore Studio 30</a>
+</div>
+</div>
+<!-- Studio 40 -->
+<div class="product-card">
+<div class="product-image">
+<img alt="Studio 40 — Tiny Homes WA" loading="lazy" src="https://static.wixstatic.com/media/9526fd_31ae4dc2457448ab9ae87dfec2a5fe91~mv2.png"/>
+<div class="product-badge badge-family">Family Home</div>
+<div class="product-overlay">
+<a class="btn btn-white" href="/products/studio-40" style="padding:10px 18px;font-size:0.85rem">View Details</a>
+<a class="btn btn-primary" href="/configurator?model=studio40" style="padding:10px 18px;font-size:0.85rem">Configure</a>
+</div>
+</div>
+<div class="product-info">
+<div class="product-series">Family Series</div>
+<h3 class="product-name">Studio 40</h3>
+<p class="product-desc">Spacious 76.7m² family home with master bedroom, second bathroom, full kitchen, and generous living areas. Designed for real family life without compromise.</p>
+<div class="product-specs">
+<span class="spec">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><rect height="18" rx="2" width="18" x="3" y="3"></rect></svg>
+              76.7 m²
+            </span>
+<span class="spec">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+              2 Bedrooms
+            </span>
+<span class="spec">
+<svg fill="none" height="12" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="12"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+              Family
+            </span>
+<span class="spec">2 Bathrooms</span>
+</div>
+<div class="product-price">
+<span class="price-from">From</span>
+<span class="price-amount">$165,000</span>
+<span class="price-note">fully installed</span>
+</div>
+<a class="product-cta" href="/products/studio-40">Explore Studio 40</a>
+</div>
+</div>
+</div>
+<div class="products-footer">
+<a class="btn btn-outline btn-lg" href="/products">View All Models</a>
+<a class="btn btn-outline btn-lg" href="/products/compare" style="border-color:var(--border);color:var(--text-body)">Compare Models</a>
+</div>
+</div>
+</section>
+<!-- ── MISSION STRIP ── -->
+<section class="mission-strip">
+<div class="container">
+<h2>People Over Profits. Always.</h2>
+<p>Tiny Homes WA was born from homelessness, suffering, and a father's promise. We reinvest 20% of every sale into WA community programs — because the mission is bigger than the business.</p>
+<div class="mission-stats">
+<div>
+<span class="mission-stat-num">20%</span>
+<div class="mission-stat-lbl">of profits to WA community</div>
+</div>
+<div>
+<span class="mission-stat-num">500+</span>
+<div class="mission-stat-lbl">families housed</div>
+</div>
+<div>
+<span class="mission-stat-num">$0</span>
+<div class="mission-stat-lbl">hidden costs</div>
+</div>
+<div>
+<span class="mission-stat-num">1</span>
+<div class="mission-stat-lbl">promise kept</div>
+</div>
+</div>
+<div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap">
+<a class="btn btn-outline-white btn-lg" href="/about">Our Story</a>
+<a class="btn btn-white btn-lg" href="/about/cawley-code">The Cawley Code</a>
+</div>
+</div>
+</section>
+<!-- ── HOW IT WORKS ── -->
+<section class="section how-it-works" id="process">
+<div class="container">
+<div class="section-header">
+<div class="section-tag">Simple Process</div>
+<h2 class="section-title">From Dream to Delivered</h2>
+<p class="section-subtitle">We've made the journey to your new home as simple and transparent as possible. No surprises. No hidden costs. Just your home, delivered.</p>
+</div>
+<div class="steps-grid">
+<div class="step-card">
+<div class="step-number">01</div>
+<div class="step-icon">
+<svg fill="none" height="28" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" width="28"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+</div>
+<h3>Design Online</h3>
+<p>Use our 3D configurator to choose your model, customise materials, and add upgrades. See your home come to life instantly with real-time pricing.</p>
+</div>
+<div class="step-card">
+<div class="step-number">02</div>
+<div class="step-icon">
+<svg fill="none" height="28" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" width="28"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+</div>
+<h3>Get Your Quote</h3>
+<p>Receive a transparent, itemised quote with zero hidden costs. Our team handles all permits and council approvals on your behalf.</p>
+</div>
+<div class="step-card">
+<div class="step-number">03</div>
+<div class="step-icon">
+<svg fill="none" height="28" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" width="28"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+</div>
+<h3>We Build It</h3>
+<p>Your home is precision-built in our factory to the highest Australian standards. Track every milestone through your customer portal.</p>
+</div>
+<div class="step-card">
+<div class="step-number">04</div>
+<div class="step-icon">
+<svg fill="none" height="28" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24" width="28"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+</div>
+<h3>Delivered to You</h3>
+<p>Your home is delivered and installed on your site in 12–16 weeks. We handle everything from transport to utility connections and handover.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- ── SUSTAINABILITY ── -->
+<section class="section sustainability-section" id="sustainability">
+<div class="container">
+<div class="sus-inner">
+<div class="sus-content">
+<div class="section-tag">Sustainability</div>
+<h2>Built for the Planet,<br/>Designed for You</h2>
+<p>Every Tiny Homes WA home is designed with sustainability at its core. From the materials we choose to the energy systems we install, we're committed to reducing your environmental footprint without compromising on comfort or quality.</p>
+<div class="sus-stats">
+<div class="sus-stat">
+<div class="sus-stat-val">60%</div>
+<div class="sus-stat-lbl">Less energy than traditional homes</div>
+</div>
+<div class="sus-stat">
+<div class="sus-stat-val">100%</div>
+<div class="sus-stat-lbl">Solar-ready on all models</div>
+</div>
+<div class="sus-stat">
+<div class="sus-stat-val">6★</div>
+<div class="sus-stat-lbl">Energy rating equivalent</div>
+</div>
+</div>
+<a class="btn btn-primary btn-lg" href="/about/sustainability">Our Sustainability Commitment</a>
+</div>
+<div class="sus-visual">
+<img alt="Sustainable tiny home with solar panels" loading="lazy" src="https://static.wixstatic.com/media/9526fd_31ae4dc2457448ab9ae87dfec2a5fe91~mv2.png"/>
+<div class="sus-badge">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"></path><path d="M12 6v6l4 2"></path></svg>
+          Green Building Certified
+        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- ── TESTIMONIALS ── -->
+<section class="section testimonials-section" id="testimonials">
+<div class="container">
+<div class="section-header">
+<div class="section-tag">Customer Stories</div>
+<h2 class="section-title">Real Homes, Real People</h2>
+<p class="section-subtitle">Don't take our word for it — hear from the families and individuals who call a Tiny Homes WA home their own.</p>
+</div>
+<div class="testimonials-grid">
+<div class="testimonial-card featured">
+<div class="testimonial-stars">★★★★★</div>
+<blockquote>"The 3D configurator made the whole process so easy. I could see exactly what my home would look like before committing. The team was professional throughout and delivered on time. Couldn't be happier."</blockquote>
+<div class="testimonial-author">
+<div class="author-avatar">SJ</div>
+<div class="author-info">
+<strong>Sarah Johnson</strong>
+<span>Studio 20 Owner · Perth, WA</span>
+</div>
+</div>
+</div>
+<div class="testimonial-card">
+<div class="testimonial-stars">★★★★★</div>
+<blockquote>"We needed a granny flat for my parents and Tiny Homes WA delivered beyond expectations. The quality is outstanding and the whole process was transparent from start to finish."</blockquote>
+<div class="testimonial-author">
+<div class="author-avatar">MT</div>
+<div class="author-info">
+<strong>Michael Thompson</strong>
+<span>Studio 40 Owner · Fremantle, WA</span>
+</div>
+</div>
+</div>
+<div class="testimonial-card">
+<div class="testimonial-stars">★★★★★</div>
+<blockquote>"As an investor, the ROI on my Studio 30 has been incredible. It was tenanted within a week of delivery. The whole process was seamless and the team genuinely cares."</blockquote>
+<div class="testimonial-author">
+<div class="author-avatar">RL</div>
+<div class="author-info">
+<strong>Rachel Lee</strong>
+<span>Studio 30 Owner · Mandurah, WA</span>
+</div>
+</div>
+</div>
+</div>
+<div style="text-align:center">
+<a class="btn btn-outline btn-lg" href="/gallery/customer-stories">Read More Stories</a>
+</div>
+</div>
+</section>
+<!-- ── FAQ ── -->
+<section class="section faq-section" id="faq">
+<div class="container">
+<div class="faq-inner">
+<div class="faq-header">
+<div class="section-tag">FAQ</div>
+<h2>Common Questions</h2>
+<p>Everything you need to know before you start designing your home.</p>
+<a class="btn btn-outline" href="/about/faq">View All FAQs</a>
+</div>
+<div class="faq-list">
+<div class="faq-item">
+<button aria-expanded="false" class="faq-question">
+            How long does delivery take?
+            <svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<div class="faq-answer">
+<p>From contract signing to delivery, the typical timeline is 12–16 weeks. This includes engineering design (4–8 weeks), council approvals (2–6 weeks), manufacturing (7–9 weeks), and delivery/installation (1–3 days). We handle all permits and approvals on your behalf.</p>
+</div>
+</div>
+<div class="faq-item">
+<button aria-expanded="false" class="faq-question">
+            What's included in the price?
+            <svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<div class="faq-answer">
+<p>Our prices are fully installed — this includes the home, delivery to your site, installation, and connection to existing utilities. There are zero hidden costs. Your quote will itemise every component so you know exactly what you're paying for.</p>
+</div>
+</div>
+<div class="faq-item">
+<button aria-expanded="false" class="faq-question">
+            Do I need council approval?
+            <svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<div class="faq-answer">
+<p>Yes, most installations require a building permit. Our compliance team handles all permit applications and council submissions on your behalf. We're experts in WA building regulations and will guide you through the entire process at no extra charge.</p>
+</div>
+</div>
+<div class="faq-item">
+<button aria-expanded="false" class="faq-question">
+            Can I finance my tiny home?
+            <svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<div class="faq-answer">
+<p>Yes. We work with several approved financing partners who specialise in modular and expandable home lending. Our team can connect you with the right lender for your situation. Use our payment calculator to estimate your repayments.</p>
+</div>
+</div>
+<div class="faq-item">
+<button aria-expanded="false" class="faq-question">
+            What is the Cawley Code?
+            <svg fill="none" height="18" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="18"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<div class="faq-answer">
+<p>The Cawley Code is our founding commitment — People Over Profits. We reinvest 20% of all revenue into WA community programs including reunification support, transitional housing, and community development. Every home you buy directly funds this mission.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ── FINAL CTA ── -->
+<section class="final-cta">
+<div class="container">
+<h2>Ready to Start Your Journey?</h2>
+<p>Join 500+ Western Australians who've already made the move to smarter, more sustainable living.</p>
+<div class="final-cta-buttons">
+<a class="btn btn-white btn-xl" href="/configurator">
+<svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+        Start Designing Now
+      </a>
+<a class="btn btn-outline-white btn-xl" href="/services/consultation">Book Free Consultation</a>
+</div>
+<p class="final-cta-note">No obligation. No pressure. Just expert advice.</p>
+</div>
+</section>
+<!-- ── FOOTER ── -->
+<footer class="site-footer">
+<div class="footer-main">
+<div class="container">
+<div class="footer-grid">
+<div class="footer-brand">
+<div class="footer-logo-wrap">
+<div class="footer-logo-icon">TW</div>
+<div class="footer-logo-name">Tiny Homes WA</div>
+</div>
+<p class="footer-brand-desc">Australia's leading expandable modular home builder. Sustainable, affordable, and beautifully designed homes that don't compromise on quality or comfort. People Over Profits — always.</p>
+<div class="footer-social">
+<a aria-label="Facebook" href="https://facebook.com/tinyhomeswa" rel="noopener" target="_blank">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path></svg>
+</a>
+<a aria-label="Instagram" href="https://instagram.com/tinyhomeswa" rel="noopener" target="_blank">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</a>
+<a aria-label="YouTube" href="https://youtube.com/tinyhomeswa" rel="noopener" target="_blank">
+<svg fill="currentColor" height="16" viewbox="0 0 24 24" width="16"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg>
+</a>
+</div>
+</div>
+<div class="footer-col">
+<h4>Products</h4>
+<div class="footer-links">
+<a href="/products/studio-20">Studio 20 (20.1m²)</a>
+<a href="/products/studio-30">Studio 30 (58.1m²)</a>
+<a href="/products/studio-40">Studio 40 (76.7m²)</a>
+<a href="/products/duplex">Duplex Range</a>
+<a href="/products/compare">Compare Models</a>
+<a href="/configurator">3D Configurator</a>
+</div>
+</div>
+<div class="footer-col">
+<h4>Services</h4>
+<div class="footer-links">
+<a href="/services/consultation">Free Consultation</a>
+<a href="/services/site-assessment">Site Assessment</a>
+<a href="/services/financing">Financing Options</a>
+<a href="/services/delivery">Delivery &amp; Installation</a>
+<a href="/services/permits">Permits &amp; Approvals</a>
+<a href="/services/warranty">Warranty Service</a>
+</div>
+</div>
+<div class="footer-col">
+<h4>Company</h4>
+<div class="footer-links">
+<a href="/about/story">Our Story</a>
+<a href="/about/cawley-code">The Cawley Code</a>
+<a href="/about/sustainability">Sustainability</a>
+<a href="/about/faq">FAQ</a>
+<a href="/about/blog">Blog</a>
+<a href="/contact">Contact Us</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="footer-bottom">
+<div class="container">
+<div class="footer-bottom-inner">
+<div class="footer-copyright">
+<div>© 2026 Tiny Homes WA Pty Ltd. All rights reserved.</div>
+<div style="margin-top:4px;font-size:0.75rem">ABN: 12 345 678 901 | Builder's Licence: BC123456</div>
+</div>
+<div class="footer-legal">
+<a href="/privacy">Privacy Policy</a>
+<a href="/terms">Terms of Service</a>
+<a href="/warranty">Warranty Terms</a>
+<a href="/sitemap">Sitemap</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<script>
+// Header scroll
+const header = document.getElementById('site-header');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 50);
+}, { passive: true });
+
+// FAQ accordion
+document.querySelectorAll('.faq-question').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.setAttribute('aria-expanded', 'false');
+      const a = q.nextElementSibling;
+      if (a) a.classList.remove('open');
+    });
+    if (!isOpen) {
+      btn.setAttribute('aria-expanded', 'true');
+      const answer = btn.nextElementSibling;
+      if (answer) answer.classList.add('open');
+    }
+  });
+});
+
+// Scroll animations
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.product-card, .step-card, .testimonial-card, .sus-stat, .trust-item').forEach((el, i) => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = `opacity 0.5s ease ${i * 0.06}s, transform 0.5s ease ${i * 0.06}s`;
+  observer.observe(el);
+});
+
+// Mobile nav (placeholder — wire to Wix mobile menu)
+document.getElementById('mobile-toggle')?.addEventListener('click', () => {
+  // Wix handles mobile nav natively
+  console.log('Mobile menu toggle');
+});
+</script>
+</body>
+</html>
